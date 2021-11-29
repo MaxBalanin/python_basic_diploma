@@ -12,7 +12,7 @@ from app.parser import lowprice
 from database import db
 from config import BASE_DIR
 
-logging.config.fileConfig(f'{BASE_DIR}/python_basic_diploma/logger/loggingconfig.ini',
+logging.config.fileConfig(f'{BASE_DIR}/logger/loggingconfig.ini',
                           disable_existing_loggers=False)
 logger = logging.getLogger('filelogs')
 

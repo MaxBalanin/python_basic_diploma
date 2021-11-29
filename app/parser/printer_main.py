@@ -4,7 +4,7 @@ from logging.config import fileConfig
 from app.parser.request_main import request_main, get_photo_list
 from config import BASE_DIR
 
-logging.config.fileConfig(f'{BASE_DIR}/python_basic_diploma/logger/loggingconfig.ini',
+logging.config.fileConfig(f'{BASE_DIR}/logger/loggingconfig.ini',
                           disable_existing_loggers=False)
 logger = logging.getLogger('filelogs')
 

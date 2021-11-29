@@ -16,7 +16,7 @@ from app.handlers.cmd_bestdeal import register_bestdeal
 from app.handlers.common import register_handlers_common
 
 
-logging.config.fileConfig(f'{BASE_DIR}/python_basic_diploma/logger/loggingconfig.ini',
+logging.config.fileConfig(f'{BASE_DIR}/logger/loggingconfig.ini',
                           disable_existing_loggers=False)
 logger = logging.getLogger('filelogs')
 
