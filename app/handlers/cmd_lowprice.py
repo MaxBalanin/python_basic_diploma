@@ -100,12 +100,19 @@ async def set_photo_count_l(message: types.Message, state: FSMContext):
         await state.finish()
 
 
+async def cmd_cancel(message: types.Message, state: FSMContext):
+    await state.finish()
+    await message.answer("Действие отменено", reply_markup=types.ReplyKeyboardRemove())
+
+
 def register_lowprice(dp: Dispatcher):
     logger.info(f'Выполняется функция ')
     dp.register_message_handler(get_lowprice_l, commands="lowprice", state="*")
+    dp.register_message_handler(cmd_cancel, commands="cancel", state="*")
     dp.register_message_handler(set_city_l, state=hotel_config_l.waiting_city_l)
     dp.register_message_handler(set_listsize_l, state=hotel_config_l.waiting_listsize_l)
     dp.register_message_handler(set_photo_need_l, state=hotel_config_l.waiting_photo_need_l)
     dp.register_message_handler(set_photo_count_l, state=hotel_config_l.waiting_photo_count_l)
+
     logger.info(f'Функция выполнена {__name__}')
 

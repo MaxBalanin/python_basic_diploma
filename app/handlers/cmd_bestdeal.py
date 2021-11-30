@@ -124,9 +124,15 @@ async def set_photo_count_b(message: types.Message, state: FSMContext):
         await state.finish()
 
 
+async def cmd_cancel(message: types.Message, state: FSMContext):
+    await state.finish()
+    await message.answer("Действие отменено", reply_markup=types.ReplyKeyboardRemove())
+
+
 def register_bestdeal(dp: Dispatcher):
     logger.info(f'Выполняется функция ')
     dp.register_message_handler(get_bestdeal_b, commands="bestdeal", state="*")
+    dp.register_message_handler(cmd_cancel, commands="cancel", state="*")
     dp.register_message_handler(set_city_b, state=hotel_config_l.waiting_city_b)
     dp.register_message_handler(set_listsize_b, state=hotel_config_l.waiting_listsize_b)
     dp.register_message_handler(set_pricemin_b, state=hotel_config_l.waiting_pricemin_b)

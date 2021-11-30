@@ -29,7 +29,8 @@ async def set_commands(bot: Bot):
                                                     " по цене и расположению от центра"),
         BotCommand(command="/history", description="Посмотреть историю запросов."),
         BotCommand(command="/history_clear", description="Очистить историю запросов."),
-        BotCommand(command="/cancel", description="Отмена команды.")
+        BotCommand(command="/cancel", description="Отмена команды."),
+        BotCommand(command="/help", description="Доступные команды.")
     ]
     await bot.set_my_commands(commands)
 

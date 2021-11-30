@@ -4,7 +4,6 @@ from logging.config import fileConfig
 
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Text
 from config import BASE_DIR
 
 logging.config.fileConfig(f'{BASE_DIR}/logger/loggingconfig.ini',
@@ -12,8 +11,7 @@ logging.config.fileConfig(f'{BASE_DIR}/logger/loggingconfig.ini',
 logger = logging.getLogger('filelogs')
 
 
-async def cmd_start(message: types.Message, state: FSMContext):
-    await state.finish()
+async def cmd_start(message: types.Message):
     await message.answer(
         "Привет! Я бот сайта hotels.com и помогу подобрать отель для отдыха в любой точке мира!\n\n"
         "/lowprice - самые дешевые отели\n"
@@ -25,8 +23,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
     )
 
 
-async def helper(message: types.Message, state: FSMContext):
-    await state.finish()
+async def helper(message: types.Message):
     await message.answer(
         "/lowprice - Узнать топ самых дешёвых отелей в городе.\n"
         "/highprice - Узнать топ самых дорогих отелей в городе.\n"
@@ -38,15 +35,8 @@ async def helper(message: types.Message, state: FSMContext):
     )
 
 
-async def cmd_cancel(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer("Действие отменено", reply_markup=types.ReplyKeyboardRemove())
-
-
 def register_handlers_common(dp: Dispatcher):
-    dp.register_message_handler(cmd_start, commands="start", state="*")
-    dp.register_message_handler(cmd_cancel, commands="cancel", state="*")
-    dp.register_message_handler(cmd_cancel, Text(equals="отмена", ignore_case=True), state="*")
-    dp.register_message_handler(helper, commands="help", state="*")
+    dp.register_message_handler(cmd_start, commands="start")
+    dp.register_message_handler(helper, commands="help")
 
 
