@@ -141,3 +141,4 @@ cython_debug/
 /.idea/
 /app/parser/api_headers
 /app/parser/api_headers.py
+/database/database.db
