@@ -17,7 +17,8 @@ from app.handlers.common import register_handlers_common
 
 
 logging.config.fileConfig(f'{BASE_DIR}/logger/loggingconfig.ini',
-                          disable_existing_loggers=False)logger = logging.getLogger('filelogs')
+                          disable_existing_loggers=False)
+logger = logging.getLogger('filelogs')
 
 
 async def set_commands(bot: Bot):
