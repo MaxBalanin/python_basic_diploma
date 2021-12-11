@@ -11,6 +11,13 @@ logger = logging.getLogger('filelogs')
 
 
 class BestDeal(Request):
+    '''
+    Переопределяет параметры для данного запроса
+    :param self.sortored = 'PRICE'
+    :param self.pricemin = user_data.get('pricemin')
+    :param self.pricemax = user_data.get('pricemax')
+    :param self.landmark = f"{float(user_data.get('landmark'))} miles"
+    '''
     def __init__(self, user_data):
         super().__init__(user_data)
         self.sortored = 'PRICE'
@@ -20,6 +27,9 @@ class BestDeal(Request):
 
 
 class HotelConfig(StatesGroup):
+    '''
+    Класс содержит машину состояний для сбора информации от пользователся по запросу bestdeal
+    '''
     waiting_city_b = State()
     waiting_listsize_b = State()
     waiting_pricemin_b = State()

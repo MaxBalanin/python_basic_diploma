@@ -22,6 +22,7 @@ logger = logging.getLogger('filelogs')
 
 
 async def set_commands(bot: Bot):
+    '''Функция добавляет описание команд в меню бота'''
     commands = [
         BotCommand(command="/lowprice", description="Узнать топ самых дешёвых отелей в городе."),
         BotCommand(command="/highprice", description="Узнать топ самых дорогих отелей в городе."),

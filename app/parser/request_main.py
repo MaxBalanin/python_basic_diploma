@@ -13,7 +13,12 @@ logging.config.fileConfig(f'{BASE_DIR}/logger/loggingconfig.ini',
 logger = logging.getLogger('filelogs')
 
 
-def get_city_id(city_name):
+def get_city_id(city_name: str) -> str:
+    '''
+    Проверяет наличие города в базе данных, если нет, то выполняет запрос к api properties/v2/search, возвращает id города
+    :param city_name название города
+    :return id города
+    '''
     logger.info(f'Выполняется функция с аргументами  {city_name}')
     try:
         city_id = get_citi_id_db(city_name.lower())
@@ -33,7 +38,13 @@ def get_city_id(city_name):
         logger.warning(f'Ошибка при выполнении функции - {e} с аргументами  {city_name}')
 
 
-def get_photo_list(id_hotel, count):
+def get_photo_list(id_hotel: str, count: str) -> list:
+    '''
+    Выполняет запрос к api properties/get-hotel-photos и возвращает список фото отелей по заданным параметрам
+    :param id_hotel id отеля для поиска
+    :param count количество фотографий
+    :return список ссылок на фото отеля
+    '''
     logger.info(f'Выполняется функция с аргументами id_hotel={id_hotel} count={count}')
     try:
         url = "https://hotels4.p.rapidapi.com/properties/get-hotel-photos"
@@ -53,8 +64,18 @@ def get_photo_list(id_hotel, count):
         logger.warning(f'Ошибка при выполнении функции - {e} с аргументами id_hotel={id_hotel} count={count}')
 
 
-def request_main(city_name='london', listsize='25', sortorder='PRICE',
-                 landmark=None, pricemin=None, pricemax=None):
+def request_main(city_name: str = 'london', listsize: str = '25', sortorder: str = 'PRICE',
+                 landmark: str = None, pricemin: str = None, pricemax: str = None):
+    '''
+    Выполняет запрос к api properties/list и возвращает список отелей по заданным параметрам
+    :param city_name название города для поиска
+    :param listsize количество отелей
+    :param sortorder тип сортировки по цене
+    :param landmark дистанция до центра
+    :param pricemin минимальная цена
+    :param pricemax максимальная цена
+    :return список словарей с данными по отелям
+    '''
     logger.info(f'Выполняется функция с аргументами city={city_name} listsize={listsize}'
                 f' landmark={landmark} pricemin={pricemin} pricemax={pricemax}')
     try:
@@ -83,5 +104,3 @@ def request_main(city_name='london', listsize='25', sortorder='PRICE',
         logger.warning(f'Ошибка при выполнении функции - {e} с аргументами city={city_name} listsize={listsize}'
                        f' landmark={landmark} pricemin={pricemin} pricemax={pricemax}')
         return None
-
-

@@ -20,6 +20,11 @@ hotel_config_l = bestdeal.HotelConfig
 
 
 async def get_bestdeal_b(message: types.Message):
+    """
+    Запускает машину состояний для команды /bestdeal и запрашивает город
+    :param message: /bestdeal
+    :param state: waiting_city_b.set()
+    """
     logger.info(f'Выполняется функция {__name__}')
     await message.answer('В каком городе смотрим отели? (название города на английском языке)')
     await hotel_config_l.waiting_city_b.set()
@@ -27,6 +32,11 @@ async def get_bestdeal_b(message: types.Message):
 
 
 async def set_city_b(message: types.Message, state: FSMContext):
+    """
+    Добавляет город словарь, переключает состояние на следущий шаг и запрашивает кол-во вариантов отелей
+    :param message: город
+    :param state: waiting_listsize_b
+    """
     logger.info(f'Выполняется функция {__name__}')
     await state.update_data(city=message.text.lower())
     await hotel_config_l.next()
@@ -35,6 +45,12 @@ async def set_city_b(message: types.Message, state: FSMContext):
 
 
 async def set_listsize_b(message: types.Message, state: FSMContext):
+    """
+    Добавляет кол-во вариантов отелей словарь, переключает состояние на следущий шаг и запрашивает минимальную цену
+    :param message: кол-во вариантов отелей
+    :param state: waiting_pricemin_b
+    :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
     await state.update_data(listsize=message.text)
     await hotel_config_l.next()
@@ -43,6 +59,12 @@ async def set_listsize_b(message: types.Message, state: FSMContext):
 
 
 async def set_pricemin_b(message: types.Message, state: FSMContext):
+    """
+    Добавляет минимальную цену в словарь, переключает состояние на следущий шаг и запрашивает максимальную цену
+    :param message: минимальная цена
+    :param state: waiting_pricemax_b
+    :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
     await state.update_data(pricemin=message.text)
     await hotel_config_l.next()
@@ -51,6 +73,12 @@ async def set_pricemin_b(message: types.Message, state: FSMContext):
 
 
 async def set_pricemax_b(message: types.Message, state: FSMContext):
+    """
+    Добавляет максимальную цену в словарь, переключает состояние на следущий шаг и запрашивает дистанцию до центра
+    :param message: максимальная цена
+    :param state: waiting_landmark_b
+    :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
     await state.update_data(pricemax=message.text)
     await hotel_config_l.next()
@@ -59,6 +87,12 @@ async def set_pricemax_b(message: types.Message, state: FSMContext):
 
 
 async def set_landmark_b(message: types.Message, state: FSMContext):
+    """
+    Добавляет дистанцию до центра в словарь, переключает состояние на следущий шаг и запрашивает необходимость фото
+    :param message: дистанция до центра
+    :param state: waiting_photo_need_lb
+    :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
     await state.update_data(landmark=message.text)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -71,6 +105,14 @@ async def set_landmark_b(message: types.Message, state: FSMContext):
 
 
 async def set_photo_need_b(message: types.Message, state: FSMContext):
+    """
+    Проверяет корректность ответа, если False возвращает на предыдущий шаг.
+    Если True добавляет ответ в словарь, если фото нужны переключает состояние на следущий шаг и запрашивает количество,
+    Если нет, то выполняет запрос, сохраняет его в базу и отправляет ответ пользователю
+    :param message: ['Да', 'Нет']
+    :param state: waiting_photo_count_b или finish
+    :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
     if message.text not in ['Да', 'Нет']:
         await message.answer('Нужны фото отелей?')
@@ -102,7 +144,14 @@ async def set_photo_need_b(message: types.Message, state: FSMContext):
 
 
 async def set_photo_count_b(message: types.Message, state: FSMContext):
+    """
+       Добавляет количество фото в словарьБ выполняет запросБ сохраняет его в базу и отправляет ответ пользователю
+       :param message: количество фото
+       :param state: finish
+       :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
+    await message.answer('Отлично, ожидайте!')
     await state.update_data(photo_count=message.text)
     user_data = await state.get_data()
     result = bestdeal.BestDeal(user_data).print()
@@ -125,11 +174,19 @@ async def set_photo_count_b(message: types.Message, state: FSMContext):
 
 
 async def cmd_cancel(message: types.Message, state: FSMContext):
+    """
+    Команда для отмены запроса
+    """
     await state.finish()
     await message.answer("Действие отменено", reply_markup=types.ReplyKeyboardRemove())
 
 
 def register_bestdeal(dp: Dispatcher):
+    """
+    Регистрирует команды в боте
+    :param dp:
+    :return:
+    """
     logger.info(f'Выполняется функция ')
     dp.register_message_handler(get_bestdeal_b, commands="bestdeal", state="*")
     dp.register_message_handler(cmd_cancel, commands="cancel", state="*")

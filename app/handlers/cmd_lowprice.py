@@ -20,6 +20,11 @@ hotel_config_l = lowprice.HotelConfig
 
 
 async def get_lowprice_l(message: types.Message):
+    """
+    Запускает машину состояний для команды /lowerprice и запрашивает город
+    :param message: /lowerprice
+    :param state: waiting_city_l.set()
+    """
     logger.info(f'Выполняется функция {__name__}')
     await message.answer('В каком городе смотрим отели? (название города на английском языке)')
     await hotel_config_l.waiting_city_l.set()
@@ -27,6 +32,11 @@ async def get_lowprice_l(message: types.Message):
 
 
 async def set_city_l(message: types.Message, state: FSMContext):
+    """
+    Добавляет город словарь, переключает состояние на следущий шаг и запрашивает кол-во вариантов отелей
+    :param message: город
+    :param state: waiting_listsize_l
+    """
     logger.info(f'Выполняется функция {__name__}')
     await state.update_data(city=message.text.lower())
     await hotel_config_l.next()
@@ -35,6 +45,12 @@ async def set_city_l(message: types.Message, state: FSMContext):
 
 
 async def set_listsize_l(message: types.Message, state: FSMContext):
+    """
+    Добавляет кол-во вариантов отелей словарь, переключает состояние на следущий шаг и запрашивает необходимость фото
+    :param message: кол-во вариантов отелей
+    :param state: waiting_photo_need_l
+    :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
     await state.update_data(listsize=message.text)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -47,6 +63,14 @@ async def set_listsize_l(message: types.Message, state: FSMContext):
 
 
 async def set_photo_need_l(message: types.Message, state: FSMContext):
+    """
+    Проверяет корректность ответа, если False возвращает на предыдущий шаг.
+    Если True добавляет ответ в словарь, если фото нужны переключает состояние на следущий шаг и запрашивает количество,
+    Если нет, то выполняет запрос, сохраняет его в базу и отправляет ответ пользователю
+    :param message: ['Да', 'Нет']
+    :param state: waiting_photo_count_l или finish
+    :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
     if message.text not in ['Да', 'Нет']:
         await message.answer('Нужны фото отелей?')
@@ -78,7 +102,14 @@ async def set_photo_need_l(message: types.Message, state: FSMContext):
 
 
 async def set_photo_count_l(message: types.Message, state: FSMContext):
+    """
+       Добавляет количество фото в словарьБ выполняет запросБ сохраняет его в базу и отправляет ответ пользователю
+       :param message: количество фото
+       :param state: finish
+       :return:
+    """
     logger.info(f'Выполняется функция {__name__}')
+    await message.answer('Отлично, ожидайте!')
     await state.update_data(photo_count=message.text)
     user_data = await state.get_data()
     result = lowprice.LowPrice(user_data).print()
@@ -101,11 +132,19 @@ async def set_photo_count_l(message: types.Message, state: FSMContext):
 
 
 async def cmd_cancel(message: types.Message, state: FSMContext):
+    """
+    Команда для отмены запроса
+    """
     await state.finish()
     await message.answer("Действие отменено", reply_markup=types.ReplyKeyboardRemove())
 
 
 def register_lowprice(dp: Dispatcher):
+    """
+    Регистрирует команды в боте
+    :param dp:
+    :return:
+    """
     logger.info(f'Выполняется функция ')
     dp.register_message_handler(get_lowprice_l, commands="lowprice", state="*")
     dp.register_message_handler(cmd_cancel, commands="cancel", state="*")

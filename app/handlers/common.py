@@ -3,7 +3,6 @@ import logging
 from logging.config import fileConfig
 
 from aiogram import Dispatcher, types
-from aiogram.dispatcher import FSMContext
 from config import BASE_DIR
 
 logging.config.fileConfig(f'{BASE_DIR}/logger/loggingconfig.ini',

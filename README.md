@@ -1,6 +1,10 @@
 # graduation project
 
-
+#Установка
+Установить python 3.9 и необходимые библиотеки из файла requirements.txt\
+В файле loggingconfig.ini изменить путь к файлу для записи логов.\
+В файл config.py добавить токен бота и ключ для rapidapi.
+Запускать через main.py
 ##app/parser
 
 ###request_main

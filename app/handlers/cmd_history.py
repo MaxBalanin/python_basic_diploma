@@ -13,6 +13,11 @@ logger = logging.getLogger('filelogs')
 
 
 async def set_history(message: types.Message):
+    """
+    Запрашивает историю из базы данных, если её нет сообщает об этом пользователю
+    :param message: /history
+    :return:
+    """
     logger.info(f'Выполняется функция ')
     try:
         history = db.get_history_db(message.from_user.id)
@@ -21,7 +26,7 @@ async def set_history(message: types.Message):
         for req in history:
             hotels = ''
             for i in json.loads(req[1]):
-                hotels += f'\t{i["hotel name"]}\n'
+                hotels += f'\t{i.get("hotel name")}\n'
             await message.answer(f'Команда: {req[3]} {req[2]}\n'
                                  f'Город: {json.loads(req[1])[0]["city"]}\n'
                                  f'Отели: \n{hotels}')
@@ -32,11 +37,21 @@ async def set_history(message: types.Message):
 
 
 async def clear_history(message: types.Message):
+    """
+    Удаляет историю пользователя
+    :param message:
+    :return:
+    """
     db.delete_history(message.from_user.id)
     await message.answer('История очищена.')
 
 
 def register_history(dp: Dispatcher):
+    """
+    Регистрирует команды в боте
+    :param dp:
+    :return:
+    """
     logger.info(f'Выполняется функция ')
     dp.register_message_handler(set_history, commands="history")
     dp.register_message_handler(clear_history, commands='history_clear')

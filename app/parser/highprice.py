@@ -11,12 +11,19 @@ logger = logging.getLogger('filelogs')
 
 
 class HighPrice(Request):
+    '''
+   Переопределяет параметры для данного запроса
+   :param self.sortored = 'PRICE_HIGHEST_FIRST'
+   '''
     def __init__(self, user_data):
         super().__init__(user_data)
         self.sortored = 'PRICE_HIGHEST_FIRST'
 
 
 class HotelConfig(StatesGroup):
+    '''
+    Класс содержит машину состояний для сбора информации от пользователся по запросу highprice
+    '''
     waiting_city_h = State()
     waiting_listsize_h = State()
     waiting_photo_need_h = State()

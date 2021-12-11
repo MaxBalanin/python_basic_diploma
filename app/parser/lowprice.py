@@ -12,11 +12,18 @@ logger = logging.getLogger('filelogs')
 
 class LowPrice(Request):
     def __init__(self, user_data):
+        '''
+        Переопределяет параметры для данного запроса
+        :param self.sortored = 'PRICE'
+        '''
         super().__init__(user_data)
         self.sortored = 'PRICE'
 
 
 class HotelConfig(StatesGroup):
+    '''
+    Класс содержит машину состояний для сбора информации от пользователся по запросу lowerprice
+    '''
     waiting_city_l = State()
     waiting_listsize_l = State()
     waiting_photo_need_l = State()
